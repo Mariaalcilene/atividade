@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Accelerometer } from 'expo-sensors';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Home() {
   const [steps, setSteps] = useState(0); // Contador de passos
-  const [meta, setMeta] = useState(50); // Meta inicial de passos
+  const [meta, setMeta] = useState(10); // Meta inicial de 10 passos
   const [elapsedTime, setElapsedTime] = useState(0); // Tempo decorrido em segundos
   const [isTracking, setIsTracking] = useState(false); // Controle do rastreamento
   const [timerRunning, setTimerRunning] = useState(false); // Controle do cronômetro
@@ -83,16 +84,32 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Contador de Passos</Text>
-      <Text style={styles.text}>Meta Atual: {meta} passos</Text>
-      <Text style={styles.text}>Passos: {steps}</Text>
-      <Text style={styles.text}>
-        Tempo: {Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}
-      </Text>
-      <Button
-        title={isTracking ? 'Pausar' : 'Iniciar'}
+      <View style={styles.circle}>
+        {/* Ícone no centro */}
+        <Ionicons name="walk" size={28} color="#000" style={styles.icon} />
+        <Text style={styles.steps}>{steps}</Text>
+        <Text style={styles.label}>Passos</Text>
+      </View>
+
+      <View style={styles.dataContainer}>
+        <View style={[styles.dataBox, styles.border]}>
+          <Text style={styles.dataLabel}>Meta</Text>
+          <Text style={styles.dataValue}>{meta}</Text>
+        </View>
+        <View style={[styles.dataBox, styles.border]}>
+          <Text style={styles.dataLabel}>Tempo</Text>
+          <Text style={styles.dataValue}>
+            {Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}
+          </Text>
+        </View>
+      </View>
+
+      <TouchableOpacity
+        style={[styles.startButton, { backgroundColor: isTracking ? '#FF4500' : '#4682B4' }]}
         onPress={handleStartTracking}
-      />
+      >
+        <Text style={styles.startButtonText}>{isTracking ? 'Pausar' : 'Iniciar'}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -103,14 +120,73 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: '#f5f5f5',
   },
-  header: {
-    fontSize: 24,
+  circle: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    borderWidth: 8,
+    borderColor: '#4682B4', // Azul
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 32,
+    position: 'relative',
+  },
+  icon: {
+    position: 'absolute',
+    top: '20%', // Ajuste da posição do ícone
+  },
+  steps: {
+    fontSize: 38, // Aumentado para destaque
     fontWeight: 'bold',
-    marginBottom: 16,
+    color: '#000',
+    marginTop: 10, // Subindo o número
   },
-  text: {
+  label: {
     fontSize: 18,
-    marginBottom: 8,
+    color: '#000',
+    marginTop: -5, // Subindo o nome "Passos"
+  },
+  dataContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    marginBottom: 24,
+  },
+  dataBox: {
+    flex: 1,
+    marginHorizontal: 4,
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  border: {
+    borderWidth: 2,
+    borderColor: '#4682B4', // Azul
+  },
+  dataLabel: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  dataValue: {
+    fontSize: 20,
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  startButton: {
+    padding: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '80%',
+  },
+  startButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
