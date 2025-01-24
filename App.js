@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 import Home from './Home';
-import Metas from './Metas';
+
 import Desafios from './Desafios';
 import Curiosidades from './Curiosidades';
 
@@ -20,7 +20,6 @@ export default function App() {
 
             if (route.name === 'Home') {
               iconName = 'home';
-            } else if (route.name === 'Metas') {
               iconName = 'target';
             } else if (route.name === 'Desafios') {
               iconName = 'bar-chart';
@@ -37,7 +36,6 @@ export default function App() {
         }}
       >
         <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Metas" component={Metas} />
         <Tab.Screen name="Desafios" component={Desafios} />
         <Tab.Screen name="Curiosidades" component={Curiosidades} />
       </Tab.Navigator>
