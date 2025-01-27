@@ -20,7 +20,6 @@ export default function App() {
 
             if (route.name === 'Home') {
               iconName = 'home';
-              iconName = 'target';
             } else if (route.name === 'Desafios') {
               iconName = 'bar-chart';
             } else if (route.name === 'Curiosidades') {

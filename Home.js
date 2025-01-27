@@ -9,7 +9,6 @@ export default function Home() {
   const [elapsedTime, setElapsedTime] = useState(0); // Tempo decorrido em segundos
   const [isTracking, setIsTracking] = useState(false); // Controle do rastreamento
   const [timerRunning, setTimerRunning] = useState(false); // Controle do cronômetro
-  const [metaAtingida, setMetaAtingida] = useState(false); // Estado para controlar se a meta foi atingida
   const incrementPercentage = 0.2; // Aumenta a meta em 20%
 
   // Inicia ou pausa o cronômetro
@@ -34,7 +33,7 @@ export default function Home() {
         const magnitude = Math.sqrt(data.x ** 2 + data.y ** 2 + data.z ** 2);
 
         // Verifica se a magnitude do movimento ultrapassa o limite
-        if (magnitude > 1.4) {
+        if (magnitude > 1.5) {
           setSteps((prevSteps) => prevSteps + 1);
         }
       });
@@ -52,37 +51,33 @@ export default function Home() {
   // Verifica se a meta foi atingida
   useEffect(() => {
     if (steps >= meta) {
-      setMetaAtingida(true); // Marca a meta como atingida
-    }
-  }, [steps]);
-
-  // Função para pausar e mostrar a mensagem de meta atingida
-  const handlePauseTracking = () => {
-    setTimerRunning(false); // Pausa o cronômetro
-    if (metaAtingida) {
+      setTimerRunning(false); // Pausa o cronômetro
       Alert.alert(
         'Parabéns!',
         `Você atingiu sua meta de ${meta} passos em ${Math.floor(elapsedTime / 60)}:${(elapsedTime % 60)
           .toString()
-          .padStart(2, '0')} minutos!`
+          .padStart(2, '0')}!`
       );
 
       // Calcula a nova meta com base no incremento percentual
       const novaMeta = Math.ceil(meta + meta * incrementPercentage);
       setMeta(novaMeta);
 
-      // Reinicia o cronômetro, mas mantém os passos dados
-      setElapsedTime(0); // Reinicia o cronômetro
+      // Reinicia o contador de passos e o cronômetro
+      setSteps(0);
+      setElapsedTime(0);
+      setTimerRunning(true); // Reinicia o cronômetro para a nova meta
     }
-  };
+  }, [steps]);
 
   // Inicia ou reinicia o rastreamento
   const handleStartTracking = () => {
     if (!isTracking) {
+      setSteps(0); // Reinicia o contador de passos
       setElapsedTime(0); // Reinicia o cronômetro
       setTimerRunning(true); // Inicia o cronômetro
     } else {
-      handlePauseTracking(); // Pausa o rastreamento e mostra a mensagem de meta atingida
+      setTimerRunning(false); // Pausa o cronômetro
     }
     setIsTracking(!isTracking);
   };
@@ -193,5 +188,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-  },
+  },
 });
